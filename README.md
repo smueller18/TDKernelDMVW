@@ -1,4 +1,4 @@
-# TD KernelDM+V/W
+# TD Kernel DM+V/W
 
 The algorithm implements the theoretical research of the following papers:
 
