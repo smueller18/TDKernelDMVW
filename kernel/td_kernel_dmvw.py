@@ -168,7 +168,7 @@ class TDKernelDMVW(object):
             self.importance_weight_concentration_map[low_index_x:high_index_x, low_index_y:high_index_y] += omega * self.measurement_concentrations[i]
 
         # alpha
-        self.confidence_map = 1 - np.exp(-self.importance_weight_map / (self.sigma_omega * self.sigma_omega))
+        self.confidence_map = 1 - np.exp(-(self.importance_weight_map)**2 / (self.sigma_omega * self.sigma_omega))
 
         # r_0
         if self.low_confidence_calculation_zero:
