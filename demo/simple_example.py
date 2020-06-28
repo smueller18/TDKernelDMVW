@@ -33,7 +33,7 @@ timestamps = [0, 60, 60]
 # call Kernel
 kernel = TDKernelDMVW(min_x, min_y, max_x, max_y, cell_size, kernel_size, wind_scale, time_scale,
                       low_confidence_calculation_zero=True, evaluation_radius=evaluation_radius)
-kernel.set_measurements(positions_x, positions_y, concentrations, timestamps, wind_speeds, wind_directions)
+kernel.set_measurements(positions_x, positions_y, concentrations, wind_speeds, wind_directions, timestamps)
 kernel.calculate_maps()
 
 # Show result as map
