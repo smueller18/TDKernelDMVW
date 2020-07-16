@@ -144,8 +144,8 @@ class TDKernelDMVW(object):
 
             norm_fact = 1 / (2 * np.pi * sigma_x * sigma_y * np.sqrt(1 - rho ** 2))
 
-            min_y = round((x-self.min_x)/self.cell_size, 0)
-            min_x = round((y-self.min_y)/self.cell_size, 0)
+            min_x = round((x-self.min_x)/self.cell_size, 0)
+            min_y = round((y-self.min_y)/self.cell_size, 0)
 
             count_cells = self.evaluation_radius * self.kernel_size / self.cell_size
             low_index_x = int(np.max([0, min_x-count_cells]))
@@ -201,8 +201,8 @@ class TDKernelDMVW(object):
             concentration = self.measurement_concentrations[i]
             timestamp = self.measurement_timestamps[i]
 
-            min_y = int(round((self.measurement_positions_x[i] - self.min_x) / self.cell_size, 0))
-            min_x = int(round((self.measurement_positions_y[i] - self.min_y) / self.cell_size, 0))
+            min_x = int(round((self.measurement_positions_x[i] - self.min_x) / self.cell_size, 0))
+            min_y = int(round((self.measurement_positions_y[i] - self.min_y) / self.cell_size, 0))
 
             count_cells = self.evaluation_radius * self.kernel_size / self.cell_size
             low_index_x = int(np.max([0, min_x - count_cells]))
