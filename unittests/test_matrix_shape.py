@@ -73,10 +73,5 @@ class TestCalcLocalMaxima(unittest.TestCase):
         self.assertEqual(number_of_x_cells, self.kernel.confidence_map.shape[0])
         self.assertEqual(number_of_y_cells, self.kernel.confidence_map.shape[1])
 
-#    def test_localmax(self):
-#        kernel.set_measurements(positions_x, positions_y, concentrations, timestamps, wind_speeds, wind_directions)
-
-
-
 if __name__ == '__main__':
     unittest.main()
