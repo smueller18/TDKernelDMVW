@@ -31,7 +31,7 @@ timestamps = [0, 0, 0]
 number_of_x_cells = (max_x - min_x) / cell_size + 1
 number_of_y_cells = (max_y - min_y) / cell_size + 1
 
-class TestCalcLocalMaxima(unittest.TestCase):
+class TestMatrixShape(unittest.TestCase):
 
     def setUp(self):
         self.kernel = TDKernelDMVW(min_x, min_y, max_x, max_y, cell_size, kernel_size, wind_scale, time_scale, low_confidence_calculation_zero=True, evaluation_radius=evaluation_radius)
@@ -72,6 +72,11 @@ class TestCalcLocalMaxima(unittest.TestCase):
         self.calculate()
         self.assertEqual(number_of_x_cells, self.kernel.confidence_map.shape[0])
         self.assertEqual(number_of_y_cells, self.kernel.confidence_map.shape[1])
+
+    def testImportanceShape(self):
+        self.calculate()
+        self.assertEqual(number_of_x_cells, self.kernel.importance_weight_map.shape[0])
+        self.assertEqual(number_of_y_cells, self.kernel.importance_weight_map.shape[1])
 
 if __name__ == '__main__':
     unittest.main()
