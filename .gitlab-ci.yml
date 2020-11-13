@@ -1,0 +1,133 @@
+---
+
+variables:
+  PYTHON_VERSION: "3.8"
+  PIPENV_VENV_IN_PROJECT: "1"
+  MODULE_NAME: td_kernel_dmvw
+
+stages:
+  - init
+  - test
+  - deploy
+
+.pipenv-install:
+  stage: init
+  image: python:$PYTHON_VERSION-slim
+  before_script:
+    - pip install pipenv
+  script:
+    - pipenv --python $PYTHON_VERSION install --dev
+  cache:
+    paths:
+      - .venv
+    key: $CI_COMMIT_REF_NAME-$PYTHON_VERSION
+    untracked: true
+    policy: pull-push
+
+pipenv-install-3.6:
+  extends: .pipenv-install
+  variables:
+    PYTHON_VERSION: "3.6"
+
+pipenv-install-3.7:
+  extends: .pipenv-install
+  variables:
+    PYTHON_VERSION: "3.7"
+
+pipenv-install-3.8:
+  extends: .pipenv-install
+
+pylint:
+  stage: test
+  image: python:$PYTHON_VERSION-slim
+  before_script:
+    - mkdir -p public/badges public/lint
+    - echo undefined > public/badges/$CI_JOB_NAME.score
+    - source .venv/bin/activate
+    - pip install pylint-gitlab
+  script:
+    - pylint --exit-zero --output-format=text $(find -type f -name "*.py" ! -path "**/.venv/**") | tee /tmp/pylint.txt
+    - sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' /tmp/pylint.txt > public/badges/$CI_JOB_NAME.score
+    - pylint --exit-zero --output-format=pylint_gitlab.GitlabCodeClimateReporter $(find -type f -name "*.py" ! -path "**/.venv/**") > codeclimate.json
+    - pylint --exit-zero --output-format=pylint_gitlab.GitlabPagesHtmlReporter $(find -type f -name "*.py" ! -path "**/.venv/**") > public/lint/index.html
+  after_script:
+    - source .venv/bin/activate
+    - anybadge --overwrite --label $CI_JOB_NAME --value=$(cat public/badges/$CI_JOB_NAME.score) --file=public/badges/$CI_JOB_NAME.svg 4=red 6=orange 8=yellow 10=green
+    - |
+      echo "Your score is: $(cat public/badges/$CI_JOB_NAME.score)"
+  cache:
+    paths:
+      - .venv
+    key: $CI_COMMIT_REF_NAME-$PYTHON_VERSION
+    policy: pull
+  artifacts:
+    paths:
+      - public
+    reports:
+      codequality: codeclimate.json
+    when: always
+
+.pytest:
+  stage: test
+  image: python:$PYTHON_VERSION-slim
+  before_script:
+    - mkdir -p public/test
+    - source .venv/bin/activate
+  script:
+    - pytest --cov-report=term --cov-report=html:public/test --cov=$MODULE_NAME --junitxml=public/test/tests.xml tests/
+  cache:
+    paths:
+      - .venv
+    key: $CI_COMMIT_REF_NAME-$PYTHON_VERSION
+    policy: pull
+
+pytest-3.6:
+  extends: .pytest
+  variables:
+    PYTHON_VERSION: "3.6"
+
+pytest-3.7:
+  extends: .pytest
+  variables:
+    PYTHON_VERSION: "3.7"
+
+pytest-3.8:
+  extends: .pytest
+  coverage: '/TOTAL.+?(\d+)%/'
+  artifacts:
+    name: coverage
+    paths:
+      - public
+    reports:
+      junit: public/test/tests.xml
+    when: always
+
+release:
+  stage: deploy
+  image: python:$PYTHON_VERSION-slim
+  before_script:
+    - source .venv/bin/activate
+    - pip install twine
+  script:
+    - python setup.py sdist bdist_wheel
+    - twine upload dist/* --verbose
+  cache:
+    paths:
+      - .venv
+    key: $CI_COMMIT_REF_NAME-$PYTHON_VERSION
+    policy: pull
+  only:
+    refs:
+      - tags
+
+pages:
+  stage: deploy
+  image: alpine:latest
+  script:
+    - echo
+  artifacts:
+    paths:
+      - public
+  only:
+    refs:
+      - master

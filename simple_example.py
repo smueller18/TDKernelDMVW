@@ -1,15 +1,10 @@
-import sys, os
-sys.path.insert(0, os.path.dirname(__file__) + "../")
-
-from kernel.td_kernel_dmvw import TDKernelDMVW
 import matplotlib.pyplot as plt
 
-import numpy as np
+from td_kernel_dmvw.td_kernel_dmvw import TDKernelDMVW
 
 __author__ = u'Stephan Müller'
 __copyright__ = u'2017, Stephan Müller'
 __license__ = u'MIT'
-
 
 # Set parameters
 min_x = 0
@@ -20,7 +15,7 @@ cell_size = 0.1
 kernel_size = 10 * cell_size
 wind_scale = 0.05
 time_scale = 0.001
-evaluation_radius = 10*kernel_size
+evaluation_radius = 10 * kernel_size
 
 # Create dummy measurement vectors
 positions_x = [4, 6.5, 15]

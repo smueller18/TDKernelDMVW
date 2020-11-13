@@ -7,7 +7,7 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__) + "../")
 
-from kernel.td_kernel_dmvw import TDKernelDMVW
+from td_kernel_dmvw.td_kernel_dmvw import TDKernelDMVW
 
 # Set parameters
 min_x = 0

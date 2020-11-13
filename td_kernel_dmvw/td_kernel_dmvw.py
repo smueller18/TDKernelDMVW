@@ -1,6 +1,8 @@
 import time
+
 import numpy as np
-import kernel.matrix_operations as mo
+
+import td_kernel_dmvw.matrix_operations as mo
 
 __author__ = u'Stephan Müller'
 __copyright__ = u'2017, Stephan Müller'
@@ -11,7 +13,9 @@ __credits__ = ["Achim Lilienthal", "Patrick Neumann", "Victor Hernandez"]
 class TDKernelDMVW(object):
     def __init__(self, min_x, min_y, max_x, max_y, cell_size, kernel_size, wind_scale, time_scale, confidence_scale=1, real_time=False, low_confidence_calculation_zero=False, evaluation_radius=0):
 
-        """TDKernelDMVW generates a gas distribution map with time, location, gas concentration and wind measurements. The model computes the distribution map for the bounding box of points (min_x, min_y) and (max_x, max_y). This class is not thread safe yet. Do not call any of the functions synchronously!
+        """TDKernelDMVW generates a gas distribution map with time, location, gas concentration and wind measurements.
+        The model computes the distribution map for the bounding box of points (min_x, min_y) and (max_x, max_y).
+        This class is not thread safe yet. Do not call any of the functions synchronously!
 
         :param min_x: x-coordinate of minimum point
         :param min_y: y-coordinate of minimum point
@@ -144,14 +148,14 @@ class TDKernelDMVW(object):
 
             norm_fact = 1 / (2 * np.pi * sigma_x * sigma_y * np.sqrt(1 - rho ** 2))
 
-            min_x = round((x-self.min_x)/self.cell_size, 0)
-            min_y = round((y-self.min_y)/self.cell_size, 0)
+            min_x = round((x - self.min_x) / self.cell_size, 0)
+            min_y = round((y - self.min_y) / self.cell_size, 0)
 
             count_cells = self.evaluation_radius * self.kernel_size / self.cell_size
-            low_index_x = int(np.max([0, min_x-count_cells]))
-            high_index_x = int(np.min([self.number_of_x_cells-1, min_x+count_cells]))
-            low_index_y = int(np.max([0, min_y-count_cells]))
-            high_index_y = int(np.min([self.number_of_y_cells-1, min_y+count_cells]))
+            low_index_x = int(np.max([0, min_x - count_cells]))
+            high_index_x = int(np.min([self.number_of_x_cells - 1, min_x + count_cells]))
+            low_index_y = int(np.max([0, min_y - count_cells]))
+            high_index_y = int(np.min([self.number_of_y_cells - 1, min_y + count_cells]))
 
             cell_grid_x = self.cell_grid_x[low_index_x:high_index_x, low_index_y:high_index_y]
             cell_grid_y = self.cell_grid_y[low_index_x:high_index_x, low_index_y:high_index_y]
