@@ -1,4 +1,6 @@
-# TD Kernel DM+V/W
+# [archived] TD Kernel DM+V/W
+
+#### IMPORTANT! This project is migrated to <https://gitlab.com/smueller18/TDKernelDMVW>
 
 The algorithm implements the theoretical research of the following papers:
 
